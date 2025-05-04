@@ -38,7 +38,7 @@ function ChessboardComponent({ config, onBoardReady, className }: ChessboardProp
   }, [config]);
 
   return (
-    <div className={className || "board-container-default"}>
+    <div className={className ?? "board-container-default"}>
       <div
         ref={ref}
         style={{ height: "100%", width: "100%", display: "table" }}

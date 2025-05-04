@@ -36,7 +36,7 @@ function App() {
       setPuzzleActive(false);
       setStatusMessage("Czas minął! Spróbuj ponownie.");
       cgApiRef.current?.set({
-        movable: { ...cgApiRef.current?.state.movable, color: undefined },
+        movable: { ...cgApiRef.current.state.movable, color: undefined },
       });
     }
     return () => {
@@ -47,10 +47,9 @@ function App() {
   const formatTime = (seconds: number): string => {
     const minutes = Math.floor(seconds / 60);
     const remainingSeconds = seconds % 60;
-    return `${minutes}:${remainingSeconds < 10 ? "0" : ""}${remainingSeconds}`;
+    return `${String(minutes)}:${remainingSeconds < 10 ? "0" : ""}${String(remainingSeconds)}`;
   };
 
-  // --- Move Handling Logic (bez zmian w logice, tylko używa cgApiRef) ---
   const getValidDests = useCallback(
     (chessInstance: ChessInstance | null): Map<Key, Key[]> | undefined => {
       if (!chessInstance) return undefined;
@@ -81,7 +80,7 @@ function App() {
     const isComputersTurnByIndex = currentMoveIndex % 2 === 1;
 
     if (isComputersTurnInGame && isComputersTurnByIndex) {
-       console.log(`useEffect: Scheduling computer move for index ${currentMoveIndex} after delay.`);
+       console.log(`useEffect: Scheduling computer move for index ${String(currentMoveIndex)} after delay.`);
         makeComputerMove();
     }
   }, [currentMoveIndex, game, puzzleActive, currentPuzzle]);
@@ -138,7 +137,7 @@ function App() {
       return;
 
     const computerMoveStr = currentPuzzle.solution[currentMoveIndex];
-    console.log(`makeComputerMove: Attempting move ${computerMoveStr} at index ${currentMoveIndex}`);
+    console.log(`makeComputerMove: Attempting move ${computerMoveStr} at index ${String(currentMoveIndex)}`);
     const from = computerMoveStr.substring(0, 2) as Key;
     const to = computerMoveStr.substring(2, 4) as Key;
 
@@ -178,7 +177,7 @@ function App() {
         setFen(puzzle.fen);
         setStatusMessage(
           `${puzzle.turn === "white" ? "Białe" : "Czarne"} zaczynają. ${
-            puzzle.description || ""
+            puzzle.description ?? ""
           }`,
         );
         setTimerActive(true);
@@ -215,7 +214,7 @@ function App() {
 
     return {
       fen: fen,
-      orientation: puzzleTurn || "white",
+      orientation: puzzleTurn ?? "white",
       turnColor: gameTurn === "w" ? "white" : "black",
       lastMove: lastMove,
       movable: {
